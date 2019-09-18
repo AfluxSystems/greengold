@@ -1,7 +1,7 @@
 include README.md
 
 recursive-include tests *
-recursive-include pypack *
+recursive-include greengold *
 recursive-include requirements *
 
 recursive-exclude * __pycache__

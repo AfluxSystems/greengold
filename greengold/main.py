@@ -1,5 +1,5 @@
 import click
-from pypack import utils
+from greengold import utils
 
 
 @click.command()

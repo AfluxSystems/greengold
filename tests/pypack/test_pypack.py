@@ -1,9 +1,9 @@
 import unittest
 
-import pypack
+import greengold
 
 
-class TestPypack(unittest.TestCase):
+class TestGreenGold(unittest.TestCase):
 
     def setUp(self):
         pass

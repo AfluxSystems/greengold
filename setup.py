@@ -2,7 +2,7 @@ import os
 import sys
 import setuptools
 from setuptools.command.test import test as TestCommand
-from pypack import __version__
+from greengold import __version__
 
 try: # for pip >= 10
     from pip._internal.req import parse_requirements
@@ -34,20 +34,20 @@ dev_reqs = [str(dr.req) for dr in parse_requirements(os.path.join(requirements_d
 
 
 setuptools.setup(
-    name="pypack",
+    name="greengold",
     version = __version__,
     description="Builds AMIs similar to Packer",
     long_description=long_description,
     author="Mark Liederbach",
     author_email="mliederbach@zendesk.com",
     packages=setuptools.find_packages(),
-    package_dir={"pypack": "pypack"},
+    package_dir={"greengold": "greengold"},
     include_package_data=True,
     install_requires=requirements,
     python_requires=">=3.4",
     entry_points={
         "console_scripts": [
-            "pypack=pypack.main:main",
+            "greengold=greengold.main:main",
         ],
     },
     classifiers=[
@@ -55,7 +55,7 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    keywords="pypack",
+    keywords="greengold",
     test_suite="tests",
     tests_require=dev_reqs,
     cmdclass={"test": PyTest},

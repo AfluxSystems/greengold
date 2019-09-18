@@ -2,7 +2,7 @@ import os
 import yaml
 import json
 
-from pypack import exceptions as ppexc
+from greengold import exceptions as ppexc
 
 
 class Config:
