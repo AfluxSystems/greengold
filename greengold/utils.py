@@ -1,10 +1,18 @@
 import click
+import datetime
 
 
-def info(message):
-    click.secho(message, fg="green")
+# def info(message, module=None):
+#     click.secho(format_message(module or "main", message), fg="green")
+#
+#
+# def error(message, module=None):
+#     click.secho(format_message(module or "main", message), fg="red", bold=True, err=True)
+#
+#
+# def format_message(module, message):
+#     return f"{module}==> {message}"
 
 
-def error(message):
-    click.secho(message, fg="red", bold=True, err=True)
-
+def iso_timestamp():
+    return datetime.datetime.utcnow().strftime("%Y-%m-%dT%H%M%S")

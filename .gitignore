@@ -1,5 +1,7 @@
 .idea
 
+*_manifest.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
