@@ -5,7 +5,7 @@ from greengold import exceptions as ggexc
 from greengold.launcher import Launcher
 from greengold.provisioner import Provisioner
 from greengold.clients.aws import AWSClient
-from greengold.utils import iso_timestamp
+from greengold.utils import timestamp
 
 
 log = logging.getLogger()
@@ -78,7 +78,7 @@ class Builder:
         log.info(f"Creating new AMI from instance {instance.id}")
         ami_id = ec2_client.create_image(
             InstanceId=instance.id,
-            Name=f"{self.config.data['ami_name']}-{iso_timestamp()}",
+            Name=f"{self.config.data['ami_name']}-{timestamp()}",
             BlockDeviceMappings=self.config.data["block_device_mappings"]
         )["ImageId"]
         ami = self.aws.get_image(ami_id)

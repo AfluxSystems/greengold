@@ -7,6 +7,9 @@ from greengold import exceptions as ggexc
 
 
 class Config:
+
+    default_key_name = "greengold-default-builder"
+
     def __init__(self, config_file, cli_options):
         self.config_file = config_file
         self.data = self.load_file(self.config_file)
@@ -33,7 +36,7 @@ class Config:
         # self.data["variables"] = self.data.get("variables", {})
 
         self.data["ami_name"] = self.data.get("ami_name", base_name)
-        self.data["key_name"] = self.data.get("key_name", "greengold-default-builder")
+        self.data["key_name"] = self.data.get("key_name", self.default_key_name)
         self.data["ssh_key"] = self.cli_options["ssh_key"] or os.path.join(
             os.path.expanduser("~"),
             ".ssh",
@@ -50,9 +53,9 @@ class Config:
         self.data["tags"] = self.data.get("tags", {})
         self.data["tags"]["platform"] = self.data["tags"].get("platform", platform)
         self.data["tags"]["owner"] = self.data["tags"].get("owner", "mark")
-        self.data["block_device_mappings"] = self.data.get(
+        self.data["block_device_mappings"] = aws_client.format_device_block_mapping(self.data.get(
             "block_device_mappings",
-            aws_client.format_device_block_mapping([
+            [
                 {
                     "device_name": "/dev/sda1",
                     "ebs": {
@@ -62,18 +65,18 @@ class Config:
                         "encrypted": True,
                     }
                 }
-            ])
-        )
-        self.data["network_interfaces"] = self.data.get(
+            ]
+        ))
+        self.data["network_interfaces"] = aws_client.format_network_interfaces(self.data.get(
             "network_interfaces",
-            aws_client.format_network_interfaces([
+            [
                 {
                     "device_index": 0,
                     "groups": ["sg-037967a7e89e41e17"],  # standard-ssh
                     "subnet_id": "subnet-d21d78fc"  # us-east-1a
                 }
-            ])
-        )
+            ]
+        ))
 
         # if "ami_id" in self.data:
         #     return

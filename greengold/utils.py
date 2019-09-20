@@ -14,5 +14,5 @@ import datetime
 #     return f"{module}==> {message}"
 
 
-def iso_timestamp():
+def timestamp():
     return datetime.datetime.utcnow().strftime("%Y-%m-%dT%H%M%S")

@@ -3,6 +3,8 @@ import logging
 import click
 from greengold.config import Config
 from greengold.builder import Builder
+from greengold.logging_config import configure_logging
+
 
 log = logging.getLogger()
 
@@ -13,10 +15,17 @@ logging.getLogger('urllib3').setLevel(logging.ERROR)
 
 
 @click.command()
-@click.option("-c", "--config-file", type=click.Path(exists=True, dir_okay=False), required=True)
-@click.option("-i", "--ssh-key", type=click.Path(exists=True, dir_okay=False))
+@click.option("-c", "--config-file", type=click.Path(exists=True, dir_okay=False),
+              required=True, help="Path to config file describing new AMI to be built.")
+@click.option("-i", "--ssh-key", type=click.Path(exists=True, dir_okay=False),
+              help="SSH key to use to connect to build instance. "
+                   "This should correspond to the key provisioned on the instance via the `key_name` field")
 @click.option("-p", "--passphrase")
-def main(config_file, ssh_key, passphrase):
+@click.option('-v', '--verbose', count=True)
+@click.option('-z', '--no-artifacts', is_flag=True, default=False,
+              help="Wet Run, where artifacts are created, but destroyed afterwards.")
+def main(config_file, ssh_key, passphrase, verbose, no_artifacts):
+    configure_logging(verbose)
     log.info(f"Greengold has started")
     cli_options = {
         "ssh_key": ssh_key,
@@ -28,12 +37,14 @@ def main(config_file, ssh_key, passphrase):
     log.info(f"Loading config file {config_file}")
     config = Config(config_file, cli_options)
     log.info(f"Running builder for prospective AMI {config.data['ami_name']}")
-    ami = Builder(config).build()
+    builder = Builder(config)
+    ami = builder.build()
     log.info(f"New AMI {ami.name} ({ami.id}) has been created")
+
+    if no_artifacts:
+        log.info(f"Wet run detected, removing AMI {ami.id} and related artifacts")
+        builder.delete_ami(ami)
 
 
 if __name__ == "__main__":
-    stream_handler = logging.StreamHandler(sys.stdout)
-    log.addHandler(stream_handler)
-    log.setLevel(logging.DEBUG)
     main()

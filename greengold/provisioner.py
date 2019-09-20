@@ -1,3 +1,7 @@
+import logging
+
+
+log = logging.getLogger()
 
 
 class Provisioner:
@@ -10,4 +14,5 @@ class Provisioner:
         pass
 
     def load_provisioner(self):
+        log.info(f"Loading provisioner")
         return []
