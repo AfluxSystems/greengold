@@ -3,7 +3,7 @@ import boto3
 from greengold import exceptions as ggexc
 
 
-log = logging.getLogger()
+log = logging.getLogger("greengold")
 
 
 class AWSClient:

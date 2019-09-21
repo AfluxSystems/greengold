@@ -4,7 +4,7 @@ from greengold.clients.aws import AWSClient
 from greengold.clients.ssh import SSHClient
 
 
-log = logging.getLogger()
+log = logging.getLogger("greengold")
 
 
 class Launcher:
@@ -30,11 +30,9 @@ class Launcher:
                 log.info(f"Waiting for instance {instance.id} boot processes to finish...")
                 ssh_client.wait_on_command("test -f /var/lib/cloud/instance/boot-finished", conn=conn)
                 log.info(f"Instance {instance.id} boot has finished")
-                # package_list = ssh_client.exec(
-                #     "dpkg-query -W -f='${Package} ${Version} ${Architecture}\n'",
-                #     conn=conn,
-                #     expected_return_code=0
-                # )[0]
+
+                # TODO: SCP config["files"] to host
+
                 log.info(f"Running provisioner scripts on instance {instance.id}")
                 for line in script:
                     ssh_client.exec(line, conn=conn, expected_return_code=0)

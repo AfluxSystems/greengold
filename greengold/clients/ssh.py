@@ -4,7 +4,7 @@ import paramiko
 from greengold import exceptions as ggexc
 
 
-log = logging.getLogger()
+log = logging.getLogger("greengold")
 
 
 class SSHClient:
@@ -93,9 +93,6 @@ class SSHClient:
             log.debug(f"Sending command '{command}' to IP Address {self.ip_address}")
             stdin, stdout, stderr = conn.exec_command(command)
             exit_code = stdout.channel.recv_exit_status()
-            if expected_return_code is not None and exit_code != expected_return_code:
-                raise ggexc.SSHReturnCodeException(f"Command '{command}' returned exit code {exit_code}. "
-                                                   f"Expected {expected_return_code}")
             stdout_lines = stdout.readlines()
             stderr_lines = stderr.readlines()
             log.info(f"Command '{command}' output:")
@@ -106,7 +103,10 @@ class SSHClient:
                 log.info(f"stdout:\n\t{stdout_text}")
             if stderr_lines:
                 stderr_text = '\t'.join(stderr_lines)
-                log.error(f"stderr:\n\t{stderr_text}")
+                log.warning(f"stderr:\n\t{stderr_text}")
+            if expected_return_code is not None and exit_code != expected_return_code:
+                raise ggexc.SSHReturnCodeException(f"Command '{command}' returned exit code {exit_code}. "
+                                                   f"Expected {expected_return_code}")
             return [l.rstrip("\n") for l in stdout_lines], [l.rstrip("\n") for l in stderr_lines]
         except ggexc.SSHClientException:
             raise

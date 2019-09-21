@@ -48,6 +48,7 @@ setuptools.setup(
     entry_points={
         "console_scripts": [
             "greengold=greengold.main:main",
+            "gg=greengold.main:main",
         ],
     },
     classifiers=[

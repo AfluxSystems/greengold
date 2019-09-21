@@ -36,5 +36,13 @@ class BuilderException(GreenGoldException):
     pass
 
 
-class AMIManagerException(GreenGoldException):
+class ProvisionerException(BuilderException):
+    pass
+
+
+class ProvisionerNotFoundException(ProvisionerException):
+    pass
+
+
+class InvalidProvisionerException(ProvisionerException):
     pass

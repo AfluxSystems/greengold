@@ -49,10 +49,14 @@ class Config:
             f"arn:aws:iam::{aws_client.root_account}:instance-profile/greengold-builder-role"
         )
         self.data["instance_type"] = self.data.get("instance_type", "t2.micro")
-        self.data["files"] = self.data.get("files", [])
+        self.data["files"] = set(self.data.get("files", []))
         self.data["tags"] = self.data.get("tags", {})
-        self.data["tags"]["platform"] = self.data["tags"].get("platform", platform)
-        self.data["tags"]["owner"] = self.data["tags"].get("owner", "mark")
+        self.data["tags"].update(
+            {
+                "platform": self.data["tags"].get("platform", platform),
+                "owner": self.data["tags"].get("owner", "mark"),
+            }
+        )
         self.data["block_device_mappings"] = aws_client.format_device_block_mapping(self.data.get(
             "block_device_mappings",
             [

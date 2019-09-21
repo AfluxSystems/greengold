@@ -8,7 +8,7 @@ from greengold.clients.aws import AWSClient
 from greengold.utils import timestamp
 
 
-log = logging.getLogger()
+log = logging.getLogger("greengold")
 
 
 class Builder:
@@ -65,8 +65,7 @@ class Builder:
             raise ggexc.BuilderException(f"Missing required provisioners {list(missing_provisioners)}")
 
         for provisioner in self.config.data["provisioners"]:
-            script += Provisioner(provisioner).script
-
+            script += Provisioner(self.config, provisioner).script
         script += [
             "sudo truncate -s 0 /home/ubuntu/.ssh/authorized_keys",
         ]
@@ -95,8 +94,8 @@ class Builder:
             ]
         )
         if ami.state == 'failed':
-            raise ggexc.AMIManagerException(f"Image {ami.id} failed provision "
-                                            f"with reason: {ami.state_reason['Message']}")
+            raise ggexc.BuilderException(f"Image {ami.id} failed provision "
+                                         f"with reason: {ami.state_reason['Message']}")
         log.info(f"New AMI {ami.id} is now available")
         return ami
 

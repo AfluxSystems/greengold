@@ -36,6 +36,11 @@ class ColorConsoleFormatter(logging.Formatter):
 
 
 def configure_logging(verbose):
+    logging.getLogger('boto3').setLevel(logging.ERROR)
+    logging.getLogger('botocore').setLevel(logging.ERROR)
+    logging.getLogger('paramiko').setLevel(logging.ERROR)
+    logging.getLogger('urllib3').setLevel(logging.ERROR)
+
     log_level = get_log_level(verbose)
     config = {
         "version": 1,
@@ -53,7 +58,7 @@ def configure_logging(verbose):
             },
         },
         "loggers": {
-            "": {
+            "greengold": {
                 "handlers": ["console"],
                 "level": log_level
             }
